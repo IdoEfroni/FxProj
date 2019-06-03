@@ -13,6 +13,17 @@ public class MyViewModel  extends Observable implements Observer {
 
     private int characterPositionRowIndex;
     private int characterPositionColumnIndex;
+    private int endPositionRow;
+
+    public int getEndPositionRow() {
+        return endPositionRow;
+    }
+
+    public int getEndPositionColumn() {
+        return endPositionColumn;
+    }
+
+    private int endPositionColumn;
 
     public StringProperty characterPositionRow = new SimpleStringProperty("1"); //For Binding
     public StringProperty characterPositionColumn = new SimpleStringProperty("1"); //For Binding
@@ -28,6 +39,8 @@ public class MyViewModel  extends Observable implements Observer {
             characterPositionRow.set(characterPositionRowIndex + "");
             characterPositionColumnIndex = model.getCharacterPositionColumn();
             characterPositionColumn.set(characterPositionColumnIndex + "");
+            endPositionRow = model.getEndPositionRow();
+            endPositionColumn = model.getEndPositionColumn();
             setChanged();
             notifyObservers();
         }

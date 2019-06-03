@@ -65,7 +65,9 @@ public class NewGameController implements Observer,Initializable, IView {
         mazeDisplayer.setMaze(maze);
         int characterPositionRow = viewModel.getCharacterPositionRow();
         int characterPositionColumn = viewModel.getCharacterPositionColumn();
-        mazeDisplayer.setCharacterPosition(characterPositionRow, characterPositionColumn);
+        int endPositionRow = viewModel.getEndPositionRow();
+        int endPositionCol = viewModel.getEndPositionColumn();
+        mazeDisplayer.setCharacterPosition(characterPositionRow, characterPositionColumn, endPositionRow,endPositionCol);
        // this.characterPositionRow.set(characterPositionRow + "");
         //this.characterPositionColumn.set(characterPositionColumn + "");
     }
