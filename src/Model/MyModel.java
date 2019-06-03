@@ -97,32 +97,49 @@ public class MyModel extends Observable implements IModel{
     public void moveCharacter(KeyCode movement) {
         switch (movement) {
             case NUMPAD8:
-                characterPositionRow--;
+                if(maze[characterPositionRow-1][characterPositionColumn] == 0){
+                    characterPositionRow--;
+                }
+                //else *sound on*
                 break;
             case NUMPAD2:
-                characterPositionRow++;
+                if(maze[characterPositionRow+1][characterPositionColumn] == 0){
+                    characterPositionRow++;
+                }
                 break;
             case NUMPAD6:
-                characterPositionColumn++;
+                if(maze[characterPositionRow][characterPositionColumn+1] == 0){
+                    characterPositionColumn++;
+                }
                 break;
             case NUMPAD4:
-                characterPositionColumn--;
+                if(maze[characterPositionRow][characterPositionColumn-1] == 0){
+                    characterPositionColumn--;
+                }
                 break;
             case NUMPAD1:
-                characterPositionRow++;
-                characterPositionColumn--;
+                if(maze[characterPositionRow+1][characterPositionColumn-1] == 0) {
+                    characterPositionRow++;
+                    characterPositionColumn--;
+                }
                 break;
             case NUMPAD3:
-                characterPositionRow++;
-                characterPositionColumn++;
+                if(maze[characterPositionRow+1][characterPositionColumn+1] == 0) {
+                    characterPositionRow++;
+                    characterPositionColumn++;
+                }
                 break;
             case NUMPAD9:
-                characterPositionRow--;
-                characterPositionColumn++;
+                if(maze[characterPositionRow-1][characterPositionColumn+1] == 0) {
+                    characterPositionRow--;
+                    characterPositionColumn++;
+                }
                 break;
             case NUMPAD7:
-                characterPositionRow--;
-                characterPositionColumn--;
+                if(maze[characterPositionRow-1][characterPositionColumn-1] == 0) {
+                    characterPositionRow--;
+                    characterPositionColumn--;
+                }
                 break;
 
         }
