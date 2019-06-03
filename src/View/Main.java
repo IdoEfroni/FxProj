@@ -26,7 +26,7 @@ public class Main extends Application {
         //MediaPlayer mediaPlayer = new MediaPlayer(sound);
         //mediaPlayer.play();
 
-
+        String ido = "idl";
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyView.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         scene = new Scene(root, 800, 700);

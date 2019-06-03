@@ -44,8 +44,8 @@ public class MazeDisplayer extends Canvas {
             double cellHeight = canvasHeight / maze.length;
             double cellWidth = canvasWidth / maze[0].length;
 
-            Image wallImage = new Image("file:///Users/yinon/IdeaProjects/FxProj/src/View/snoop.jpg");
-            Image characterImage = new Image("file:///Users/yinon/IdeaProjects/FxProj/src/View/hi.jpg");
+            Image wallImage = new Image("file:///Users/Public/FxProj/src/View/wall.jpg");
+            Image characterImage = new Image("file:///Users/Public/FxProj/src/View/hodor.jpg");
 
             GraphicsContext gc = getGraphicsContext2D();
             gc.clearRect(0, 0, getWidth(), getHeight());
