@@ -4,12 +4,20 @@ import IO.MyDecompressorInputStream;
 import Server.*;
 import Client.*;
 import algorithms.mazeGenerators.Maze;
+import algorithms.*;
+import algorithms.mazeGenerators.MyMazeGenerator;
+import algorithms.mazeGenerators.Position;
+import algorithms.search.AState;
+import algorithms.search.MazeState;
+import algorithms.search.Solution;
 import javafx.scene.input.KeyCode;
 import test.RunCommunicateWithServers;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -20,6 +28,8 @@ public class MyModel extends Observable implements IModel{
     private int[][] maze;
     private Maze mazeM;
     private Server mazeGeneratingServer;
+    private Server mazeSolutionServer;
+    private ArrayList<int[]> arraySol;
     public MyModel() {
         startServers();
     }
@@ -53,6 +63,31 @@ public class MyModel extends Observable implements IModel{
             notifyObservers();
         });
     }
+    public void startSolve(){
+        if (mazeSolutionServer == null) {
+            mazeSolutionServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
+            mazeSolutionServer.start();
+        }
+    }
+    public void solveMaze(){
+        startSolve();
+        threadPool.execute(() -> {
+            //generateRandomMaze(width,height);
+            CommunicateWithServer_SolveSearchProblem();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            setChanged();
+            notifyObservers();
+        });
+    }
+
+    @Override
+    public ArrayList<int[]> getSolution() {
+        return arraySol;
+    }
 
     private void CommunicateWithServer_MazeGenerating(int rows, int columns) {
         try {
@@ -80,6 +115,44 @@ public class MyModel extends Observable implements IModel{
                         var10.printStackTrace();
                     }
 
+                }
+            });
+            client.communicateWithServer();
+        } catch (UnknownHostException var1) {
+            var1.printStackTrace();
+        }
+    }
+
+    public void CommunicateWithServer_SolveSearchProblem() {
+        arraySol = new ArrayList<>();
+        try {
+            Client client = new Client(InetAddress.getLocalHost(), 5401, new IClientStrategy() {
+                public void clientStrategy(InputStream inFromServer, OutputStream outToServer) {
+                    try {
+                        ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
+                        ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
+                        toServer.flush();
+
+                      //  MyMazeGenerator mg = new MyMazeGenerator();
+                       // Maze maze = mg.generate(50, 50);
+
+                        System.out.println(mazeM.getStartPosition() + " , " + mazeM.getGoalPosition());
+                        toServer.writeObject(mazeM);
+                        toServer.flush();
+                        Solution mazeSolution = (Solution)fromServer.readObject();
+                        System.out.println(String.format("Solution steps: %s", mazeSolution));
+                        ArrayList<AState> mazeSolutionSteps = mazeSolution.getSolutionPath();
+
+                        for(int i = 0; i < mazeSolutionSteps.size(); ++i) {
+                            System.out.println(String.format("%s. %s", i, ((AState)mazeSolutionSteps.get(i)).toString()));
+                            MazeState mazeS = (MazeState)mazeSolutionSteps.get(i);
+                            int []temp = {mazeS.getPosition().getRowIndex(),mazeS.getPosition().getColumnIndex()};
+                            arraySol.add(temp);
+                        }
+
+                    } catch (Exception var10) {
+                        var10.printStackTrace();
+                    }
                 }
             });
             client.communicateWithServer();

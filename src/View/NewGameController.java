@@ -15,17 +15,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+
 import javax.annotation.Resource;
 import java.awt.*;
 import java.io.*;
@@ -43,7 +43,7 @@ public class NewGameController implements Observer,Initializable, IView {
 
     private MyViewModel viewModel;
     @FXML
-    private ChoiceBox<String> choice;
+    private ComboBox<String>comboSolve;
     @FXML
     private ChoiceBox<String> choiceSolver;
     @FXML
@@ -54,7 +54,8 @@ public class NewGameController implements Observer,Initializable, IView {
     public TextField txtfld_columnsNum;
     @FXML
     public MazeDisplayer mazeDisplayer;
-
+    @FXML
+    private ComboBox<String>combo;
 /* the code from the lecture*/
     public void setViewModel(MyViewModel viewModel) {
         this.viewModel = viewModel;
@@ -99,7 +100,7 @@ public class NewGameController implements Observer,Initializable, IView {
     private void generate(ActionEvent event) {
         lock = false;
         screen.setText("");
-        String maze = choice.getValue();
+        String maze = combo.getValue();
 
         try {
             InputStream in = new FileInputStream("resources/config.properties");
@@ -145,23 +146,49 @@ public class NewGameController implements Observer,Initializable, IView {
     }
         @FXML
     private void solve(ActionEvent event){
+
         if(lock == false){
-            String massege = choiceSolver.getValue();
+
+            try {
+                InputStream in = new FileInputStream("resources/config.properties");
+                Throwable var1 = null;
+
+                SimpleMazeGenerator var3;
+                Properties prop = new Properties();
+                prop.load(in);
+                in.close();
+
+            String massege = comboSolve.getValue();
             if(massege !=null){
                 if(massege == "BFS"){
+                    prop.setProperty("Solve","BFS");
                     screen.setText("BFS is selected");
                     System.out.println("BFS");
                 }
+
                 if(massege == "DFS"){
+                    prop.setProperty("Solve","DFS");
                     screen.setText("DFS is selected");
                     System.out.println("DFS");
+
                 }if(massege =="Best First Search"){
+                    prop.setProperty("Solve","Best First Search");
                     screen.setText("Best first search is selected");
                     System.out.println("Best first search");
                 }
+                viewModel.solveMaze();
+                //displayMaze(viewModel.getsolution());
             }
 
-        }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }/////
         else{
             screen.setText("you can't do it");
             System.out.println("you can't do it");
@@ -230,8 +257,8 @@ public class NewGameController implements Observer,Initializable, IView {
         String name_S2 = "DFS";
         String name_S3 = "Best First Search";
         listSolution.addAll(name_S1, name_S2, name_S3);
-        choice.getItems().addAll(listGenerate);
-        choiceSolver.getItems().addAll(listSolution);
+        combo.getItems().addAll(listGenerate);
+        comboSolve.getItems().addAll(listSolution);
     }
 
 

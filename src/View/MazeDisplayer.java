@@ -46,6 +46,7 @@ public class MazeDisplayer extends Canvas {
 
             Image wallImage = new Image("file:///Users/Public/FxProj/src/View/wall.jpg");
             Image characterImage = new Image("file:///Users/Public/FxProj/src/View/hodor.jpg");
+            Image path = new Image("file:///Users/Public/FxProj/resources/brick.jpg");
 
             GraphicsContext gc = getGraphicsContext2D();
             gc.clearRect(0, 0, getWidth(), getHeight());
@@ -56,6 +57,9 @@ public class MazeDisplayer extends Canvas {
                     if (maze[i][j] == 1) {
                         //gc.fillRect(i * cellHeight, j * cellWidth, cellHeight, cellWidth);
                         gc.drawImage(wallImage, i * cellHeight, j * cellWidth, cellHeight, cellWidth);
+                    }
+                    else{
+                        gc.drawImage(path, i * cellHeight, j * cellWidth, cellHeight, cellWidth);
                     }
                 }
             }
