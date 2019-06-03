@@ -17,15 +17,19 @@ public class MazeDisplayer extends Canvas {
     private int[][] maze;
     private int characterPositionRow = 1;
     private int characterPositionColumn = 1;
+    private int endPositionRow = 1;
+    private int endPositionColumn = 1;
 
     public void setMaze(int[][] maze) {
         this.maze = maze;
         redraw();
     }
 
-    public void setCharacterPosition(int row, int column) {
+    public void setCharacterPosition(int row, int column, int endR, int endC) {
         characterPositionRow = row;
         characterPositionColumn = column;
+        endPositionRow = endR;
+        endPositionColumn = endC;
         redraw();
     }
 
@@ -47,6 +51,7 @@ public class MazeDisplayer extends Canvas {
             Image wallImage = new Image("file:///Users/Public/FxProj/src/View/wall.jpg");
             Image characterImage = new Image("file:///Users/Public/FxProj/src/View/hodor.jpg");
             Image path = new Image("file:///Users/Public/FxProj/resources/brick.jpg");
+            Image endImg = new Image("file:///Users/yinon/IdeaProjects/FxProj/src/View/bran.jpg");
 
             GraphicsContext gc = getGraphicsContext2D();
             gc.clearRect(0, 0, getWidth(), getHeight());
@@ -56,7 +61,7 @@ public class MazeDisplayer extends Canvas {
                 for (int j = 0; j < maze[i].length; j++) {
                     if (maze[i][j] == 1) {
                         //gc.fillRect(i * cellHeight, j * cellWidth, cellHeight, cellWidth);
-                        gc.drawImage(wallImage, i * cellHeight, j * cellWidth, cellHeight, cellWidth);
+                        gc.drawImage(wallImage, j * cellHeight, i * cellWidth, cellHeight, cellWidth);
                     }
                     else{
                         gc.drawImage(path, i * cellHeight, j * cellWidth, cellHeight, cellWidth);
@@ -67,6 +72,7 @@ public class MazeDisplayer extends Canvas {
             //Draw Character
             //gc.setFill(Color.RED);
             //gc.fillOval(characterPositionColumn * cellHeight, characterPositionRow * cellWidth, cellHeight, cellWidth);
+            gc.drawImage(endImg,endPositionColumn*cellHeight,endPositionRow *cellWidth, cellHeight,cellWidth);
             gc.drawImage(characterImage, characterPositionColumn * cellHeight, characterPositionRow * cellWidth, cellHeight, cellWidth);
         }
     }

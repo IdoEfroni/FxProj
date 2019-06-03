@@ -18,5 +18,8 @@ public interface IModel {
     int getCharacterPositionColumn();
     void solveMaze();
     ArrayList<int[]> getSolution();
-}
+
+    int getEndPositionRow();
+    int getEndPositionColumn();
+    }
 

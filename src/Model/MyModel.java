@@ -47,6 +47,16 @@ public class MyModel extends Observable implements IModel{
 
     private int characterPositionRow = 1;
     private int characterPositionColumn = 1;
+    private int endPositionRow = 1;
+    private int endPositionColumn = 1;
+
+    public int getEndPositionRow() {
+        return endPositionRow;
+    }
+
+    public int getEndPositionColumn() {
+        return endPositionColumn;
+    }
 
     @Override
     public void generateMaze(int width, int height) {
@@ -110,6 +120,9 @@ public class MyModel extends Observable implements IModel{
                         mazeM = maze;
                         characterPositionRow = mazeM.getStartPosition().getRowIndex();
                         characterPositionColumn = mazeM.getStartPosition().getColumnIndex();
+                        endPositionRow = mazeM.getGoalPosition().getRowIndex();
+                        endPositionColumn = mazeM.getGoalPosition().getColumnIndex();
+
 
                     } catch (Exception var10) {
                         var10.printStackTrace();
@@ -170,32 +183,53 @@ public class MyModel extends Observable implements IModel{
     public void moveCharacter(KeyCode movement) {
         switch (movement) {
             case NUMPAD8:
-                characterPositionRow--;
+                if(characterPositionRow-1>=0 && characterPositionRow-1<maze.length && maze[characterPositionRow-1][characterPositionColumn] == 0){
+                    characterPositionRow--;
+                }
+                //else *sound on*
                 break;
             case NUMPAD2:
-                characterPositionRow++;
+                if(characterPositionRow+1>=0 && characterPositionRow+1<maze.length && maze[characterPositionRow+1][characterPositionColumn] == 0){
+                    characterPositionRow++;
+                }
                 break;
             case NUMPAD6:
-                characterPositionColumn++;
+                if(characterPositionColumn+1>=0 && characterPositionColumn+1<maze[characterPositionRow].length && maze[characterPositionRow][characterPositionColumn+1] == 0){
+                    characterPositionColumn++;
+                }
                 break;
             case NUMPAD4:
-                characterPositionColumn--;
+                if(characterPositionColumn-1>=0 && characterPositionColumn-1<maze[characterPositionRow].length && maze[characterPositionRow][characterPositionColumn-1] == 0){
+                    characterPositionColumn--;
+                }
                 break;
             case NUMPAD1:
-                characterPositionRow++;
-                characterPositionColumn--;
+                if(characterPositionColumn-1>=0 && characterPositionColumn-1<maze[characterPositionRow].length &&
+                        characterPositionRow+1>=0 && characterPositionRow+1<maze.length && maze[characterPositionRow+1][characterPositionColumn-1] == 0) {
+                    characterPositionRow++;
+                    characterPositionColumn--;
+                }
                 break;
             case NUMPAD3:
-                characterPositionRow++;
-                characterPositionColumn++;
+                if(characterPositionColumn+1>=0 && characterPositionColumn+1<maze[characterPositionRow].length &&
+                        characterPositionRow+1>=0 && characterPositionRow+1<maze.length && maze[characterPositionRow+1][characterPositionColumn+1] == 0) {
+                    characterPositionRow++;
+                    characterPositionColumn++;
+                }
                 break;
             case NUMPAD9:
-                characterPositionRow--;
-                characterPositionColumn++;
+                if(characterPositionColumn+1>=0 && characterPositionColumn+1<maze[characterPositionRow].length &&
+                        characterPositionRow-1>=0 && characterPositionRow-1<maze.length && maze[characterPositionRow-1][characterPositionColumn+1] == 0) {
+                    characterPositionRow--;
+                    characterPositionColumn++;
+                }
                 break;
             case NUMPAD7:
-                characterPositionRow--;
-                characterPositionColumn--;
+                if(characterPositionColumn-1>=0 && characterPositionColumn-1<maze[characterPositionRow].length &&
+                        characterPositionRow-1>=0 && characterPositionRow-1<maze.length && maze[characterPositionRow-1][characterPositionColumn-1] == 0) {
+                    characterPositionRow--;
+                    characterPositionColumn--;
+                }
                 break;
 
         }
