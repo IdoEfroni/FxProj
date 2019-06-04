@@ -27,8 +27,8 @@ public class MyModel extends Observable implements IModel{
     private ExecutorService threadPool = Executors.newCachedThreadPool();
     private int[][] maze;
     private Maze mazeM;
-    private Server mazeGeneratingServer;
-    private Server mazeSolutionServer;
+    private static Server mazeGeneratingServer;
+    private static Server mazeSolutionServer;
     private ArrayList<int[]> arraySol;
     public MyModel() {
         startServers();
