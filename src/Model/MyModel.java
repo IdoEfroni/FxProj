@@ -25,11 +25,13 @@ import java.util.concurrent.Executors;
 
 public class MyModel extends Observable implements IModel{
     private ExecutorService threadPool = Executors.newCachedThreadPool();
+    private ExecutorService threadPool2 = Executors.newCachedThreadPool();
+
     private int[][] maze;
     private Maze mazeM;
     private Server mazeGeneratingServer;
     private Server mazeSolutionServer;
-    private ArrayList<int[]> arraySol;
+    private ArrayList<int[]> arraySol = new ArrayList<int[]>();
     public MyModel() {
         startServers();
     }
@@ -37,7 +39,9 @@ public class MyModel extends Observable implements IModel{
     public void startServers() {
         if (mazeGeneratingServer == null) {
             mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
+            mazeSolutionServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
             mazeGeneratingServer.start();
+            mazeSolutionServer.start();
         }
     }
 
@@ -53,7 +57,6 @@ public class MyModel extends Observable implements IModel{
     public int getEndPositionRow() {
         return endPositionRow;
     }
-
     public int getEndPositionColumn() {
         return endPositionColumn;
     }
@@ -80,7 +83,6 @@ public class MyModel extends Observable implements IModel{
         }
     }
     public void solveMaze(){
-        startSolve();
         threadPool.execute(() -> {
             //generateRandomMaze(width,height);
             CommunicateWithServer_SolveSearchProblem();
@@ -123,7 +125,6 @@ public class MyModel extends Observable implements IModel{
                         endPositionRow = mazeM.getGoalPosition().getRowIndex();
                         endPositionColumn = mazeM.getGoalPosition().getColumnIndex();
 
-
                     } catch (Exception var10) {
                         var10.printStackTrace();
                     }
@@ -137,7 +138,6 @@ public class MyModel extends Observable implements IModel{
     }
 
     public void CommunicateWithServer_SolveSearchProblem() {
-        arraySol = new ArrayList<>();
         try {
             Client client = new Client(InetAddress.getLocalHost(), 5401, new IClientStrategy() {
                 public void clientStrategy(InputStream inFromServer, OutputStream outToServer) {
@@ -146,21 +146,27 @@ public class MyModel extends Observable implements IModel{
                         ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
                         toServer.flush();
 
-                      //  MyMazeGenerator mg = new MyMazeGenerator();
-                       // Maze maze = mg.generate(50, 50);
-
                         System.out.println(mazeM.getStartPosition() + " , " + mazeM.getGoalPosition());
-                        toServer.writeObject(mazeM);
+                        byte[] b = mazeM.toByteArray();
+                        ArrayList<Byte> b1= intTo5Digit(characterPositionRow);
+                        ArrayList<Byte> b2= intTo5Digit(characterPositionColumn);
+                        for(int i=0;i<5;i++){
+                            b[10+i] = b1.get(i);
+                            b[15+i] = b2.get(i);
+                        }
+                        Maze solveMaze =  new Maze(b);
+
+                        toServer.writeObject(solveMaze);
                         toServer.flush();
                         Solution mazeSolution = (Solution)fromServer.readObject();
                         System.out.println(String.format("Solution steps: %s", mazeSolution));
                         ArrayList<AState> mazeSolutionSteps = mazeSolution.getSolutionPath();
-
+                        arraySol = new ArrayList<>();
                         for(int i = 0; i < mazeSolutionSteps.size(); ++i) {
                             System.out.println(String.format("%s. %s", i, ((AState)mazeSolutionSteps.get(i)).toString()));
                             MazeState mazeS = (MazeState)mazeSolutionSteps.get(i);
                             int []temp = {mazeS.getPosition().getRowIndex(),mazeS.getPosition().getColumnIndex()};
-                            arraySol.add(temp);
+                            MyModel.this.arraySol.add(temp);
                         }
 
                     } catch (Exception var10) {
@@ -172,6 +178,19 @@ public class MyModel extends Observable implements IModel{
         } catch (UnknownHostException var1) {
             var1.printStackTrace();
         }
+    }
+
+    private ArrayList<Byte> intTo5Digit(int number) {
+        int factor = 10000;
+        ArrayList<Byte> BArray = new ArrayList<Byte>();
+        boolean var4 = false;
+        while(factor > 0) {
+            int temp = number / factor;
+            number %= factor;
+            factor /= 10;
+            BArray.add((byte)temp);
+        }
+        return BArray;
     }
 
     @Override

@@ -30,10 +30,7 @@ import javax.annotation.Resource;
 import java.awt.*;
 import java.io.*;
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class NewGameController implements Observer,Initializable, IView {
     boolean lock = true;
@@ -64,14 +61,14 @@ public class NewGameController implements Observer,Initializable, IView {
     @Override
     public void displayMaze(int[][] maze) {
         mazeDisplayer.setMaze(maze);
-        int characterPositionRow = viewModel.getCharacterPositionRow();
-        int characterPositionColumn = viewModel.getCharacterPositionColumn();
-        int endPositionRow = viewModel.getEndPositionRow();
-        int endPositionCol = viewModel.getEndPositionColumn();
+    int characterPositionRow = viewModel.getCharacterPositionRow();
+    int characterPositionColumn = viewModel.getCharacterPositionColumn();
+    int endPositionRow = viewModel.getEndPositionRow();
+    int endPositionCol = viewModel.getEndPositionColumn();
         mazeDisplayer.setCharacterPosition(characterPositionRow, characterPositionColumn, endPositionRow,endPositionCol);
-       // this.characterPositionRow.set(characterPositionRow + "");
-        //this.characterPositionColumn.set(characterPositionColumn + "");
-    }
+    // this.characterPositionRow.set(characterPositionRow + "");
+    //this.characterPositionColumn.set(characterPositionColumn + "");
+}
 
     @Override
     public void update(Observable o, Object arg) {
@@ -179,7 +176,18 @@ public class NewGameController implements Observer,Initializable, IView {
                     System.out.println("Best first search");
                 }
                 viewModel.solveMaze();
-                //displayMaze(viewModel.getsolution());
+                //ArrayList<int[]>solTemp = viewModel.getsolution();
+                /*
+                int [][] tempMaze = viewModel.getMaze();
+                for(int i=0;i<solTemp.size();i++){
+                    int x = solTemp.get(i)[0];
+                    int y = solTemp.get(i)[1];
+                    tempMaze[x][y]=2;
+                }
+                */
+                mazeDisplayer.setSol(viewModel.getsolution());
+
+
             }
 
 
@@ -218,7 +226,7 @@ public class NewGameController implements Observer,Initializable, IView {
         window.setScene(scene);
 
         NewGameController view = fxmlLoader.getController();
-//        view.setResizeEvent(scene);
+//       view.setResizeEvent(scene);
         view.setViewModel(viewModel);
         viewModel.addObserver(view);
 
