@@ -17,30 +17,9 @@ import java.util.ArrayList;
 public class MazeDisplayer extends Canvas {
 
     private int[][] maze;
-    private int characterPositionRow = 1;
-    private int characterPositionColumn = 1;
-    private int endPositionRow = 1;
-    private int endPositionColumn = 1;
-    private ArrayList<int[]> arrsol;
     public void setMaze(int[][] maze) {
         this.maze = maze;
         redraw();
-    }
-
-    public void setCharacterPosition(int row, int column, int endR, int endC) {
-        characterPositionRow = row;
-        characterPositionColumn = column;
-        endPositionRow = endR;
-        endPositionColumn = endC;
-        redraw();
-    }
-
-    public int getCharacterPositionRow() {
-        return characterPositionRow;
-    }
-
-    public int getCharacterPositionColumn() {
-        return characterPositionColumn;
     }
 
     public void redraw() {
@@ -49,101 +28,31 @@ public class MazeDisplayer extends Canvas {
             double canvasWidth = getWidth();
             double cellHeight = canvasHeight / maze.length;
             double cellWidth = canvasWidth / maze[0].length;
-
             Image wallImage = new Image("brick.jpg");
-            Image characterImage = new Image("mario.png");
             Image path = new Image("path.png");
-            Image endImg = new Image("peach.jpg");
-
             GraphicsContext gc = getGraphicsContext2D();
             gc.clearRect(0, 0, getWidth(), getHeight());
-
             //Draw Maze
             for (int i = 0; i < maze.length; i++) {
                 for (int j = 0; j < maze[i].length; j++) {
                     if (maze[i][j] == 1) {
                         //gc.fillRect(i * cellHeight, j * cellWidth, cellHeight, cellWidth);
                         gc.drawImage(wallImage, j * cellHeight, i * cellWidth, cellHeight, cellWidth);
-                    }
-                    else{
+                    } else {
                         gc.drawImage(path, j * cellHeight, i * cellWidth, cellHeight, cellWidth);
                     }
                 }
             }
-
-            //Draw Character
-            //gc.setFill(Color.RED);
-            //gc.fillOval(characterPositionColumn * cellHeight, characterPositionRow * cellWidth, cellHeight, cellWidth);
-            gc.drawImage(endImg,endPositionColumn*cellHeight,endPositionRow *cellWidth, cellHeight,cellWidth);
-            gc.drawImage(characterImage, characterPositionColumn * cellHeight, characterPositionRow * cellWidth, cellHeight, cellWidth);
         }
     }
 
     //region Properties
     private StringProperty ImageFileNameWall = new SimpleStringProperty();
-    private StringProperty ImageFileNameCharacter = new SimpleStringProperty();
-
     public String getImageFileNameWall() {
         return ImageFileNameWall.get();
     }
-
     public void setImageFileNameWall(String imageFileNameWall) {
         this.ImageFileNameWall.set(imageFileNameWall);
-    }
-
-    public String getImageFileNameCharacter() {
-        return ImageFileNameCharacter.get();
-    }
-
-    public void setImageFileNameCharacter(String imageFileNameCharacter) {
-        this.ImageFileNameCharacter.set(imageFileNameCharacter);
-    }
-
-    public void setSol(ArrayList<int[]> getsolution) {
-        arrsol = getsolution;
-        presentSol();
-    }
-
-    private void presentSol() {
-        if (maze != null) {
-            double canvasHeight = getHeight();
-            double canvasWidth = getWidth();
-            double cellHeight = canvasHeight / maze.length;
-            double cellWidth = canvasWidth / maze[0].length;
-            Image wallImage = new Image("brick.jpg");
-            Image characterImage = new Image("mario.png");
-            Image path = new Image("path.png");
-            Image endImg = new Image("peach.jpg");
-
-            GraphicsContext gc = getGraphicsContext2D();
-            gc.clearRect(0, 0, getWidth(), getHeight());
-
-            //Draw Maze
-            for (int i = 0; i < maze.length; i++) {
-                for (int j = 0; j < maze[i].length; j++) {
-                    if (maze[i][j] == 1) {
-                        //gc.fillRect(i * cellHeight, j * cellWidth, cellHeight, cellWidth);
-                        gc.drawImage(wallImage, j * cellHeight, i * cellWidth, cellHeight, cellWidth);
-                    }
-                    else {
-                        gc.drawImage(path, j * cellHeight, i * cellWidth, cellHeight, cellWidth);
-                    }
-                }
-            }
-
-            //Draw Character
-            //gc.setFill(Color.RED);
-            //gc.fillOval(characterPositionColumn * cellHeight, characterPositionRow * cellWidth, cellHeight, cellWidth);
-            gc.drawImage(endImg,endPositionColumn*cellHeight,endPositionRow *cellWidth, cellHeight,cellWidth);
-            gc.drawImage(characterImage, characterPositionColumn * cellHeight, characterPositionRow * cellWidth, cellHeight, cellWidth);
-            for(int i=0;i<arrsol.size();i++){
-                int x = arrsol.get(i)[0];
-                int y = arrsol.get(i)[1];
-                Image ravan = new Image("coin.png");
-                gc.drawImage(ravan, y * cellHeight, x * cellWidth, cellHeight, cellWidth);
-
-            }
-        }
     }
     //endregion
 

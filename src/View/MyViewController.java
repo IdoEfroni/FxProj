@@ -24,7 +24,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class MyViewController implements IView {
 
@@ -34,7 +37,7 @@ public class MyViewController implements IView {
     }
 
     @FXML
-    public void exit(ActionEvent event){
+    public void exit(ActionEvent event) {
         System.exit(0);
     }
 
@@ -43,7 +46,6 @@ public class MyViewController implements IView {
         Pane pane = new HBox(15);
         Image im = new Image("snoop.jpg");
         ImageView imv = new ImageView(im);
-//    pane.getChildren().add(imv);
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "ido & inon");
         alert.setGraphic(imv);
         alert.showAndWait();
@@ -62,19 +64,28 @@ public class MyViewController implements IView {
         Scene scene = new Scene(tableParent, 800, 700);
         scene.getStylesheets().add(getClass().getResource("GenerateStyle.css").toExternalForm());
 
+        String ssound = "file:///C:/Users/Public/FxProj/resources/maritheme.mp3";
+        Media sound = new Media(ssound);
+        MediaPlayer a =new MediaPlayer(sound);
+        a.setOnEndOfMedia(new Runnable() {
+            public void run() {
+                a.seek(Duration.ZERO);
+            }
+        });
+        a.play();
+
 
         Stage window = null;
-        if (event.getTarget().toString().substring(0,event.getTarget().toString().indexOf('@')).equals("MenuItem")){
+        if (event.getTarget().toString().substring(0, event.getTarget().toString().indexOf('@')).equals("MenuItem")) {
             MenuItem menu = ((MenuItem) event.getSource());
             while (menu.getParentPopup() == null) {
                 menu = menu.getParentMenu();
             }
 
             window = (Stage) menu.getParentPopup().getOwnerWindow();
-        }
-        else{
+        } else {
             //Button button = ((Button)event.getSource());
-            window = (Stage)((Node)event.getSource()).getScene().getWindow();
+            window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         }
 
         //Stage window = new Stage();

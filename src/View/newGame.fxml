@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import View.CharacterDisplayer?>
 <?import View.MazeDisplayer?>
+<?import View.SolDisplayer?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -14,11 +16,10 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane onKeyPressed="#KeyPressed" prefWidth="420.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.NewGameController">
+<BorderPane fx:id="border" onKeyPressed="#KeyPressed" prefHeight="736.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.NewGameController">
    <left>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -112,13 +113,18 @@
       </TextField>
    </bottom>
     <center>
-        <Pane BorderPane.alignment="CENTER">
-            <children>
-                <MazeDisplayer fx:id="mazeDisplayer" height="600.0" imageFileNameCharacter="hodor.jpg" imageFileNameWall="wall.jpg" width="600.0" />
-            </children>
-            <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </padding>
-        </Pane>
+      <GridPane fx:id="pane" BorderPane.alignment="CENTER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+                <MazeDisplayer fx:id="mazeDisplayer" height="600.0" imageFileNameWall="wall.jpg" width="600.0" />
+                <SolDisplayer fx:id="solDisplayer" height="600.0" imageFileNamePath="path.jpg" width="600.0" />
+                <CharacterDisplayer fx:id="characterDisplayer" height="600.0" imageFileNameCharacter="mario.jpg" width="600.0" />
+         </children>
+      </GridPane>
     </center>
 </BorderPane>
