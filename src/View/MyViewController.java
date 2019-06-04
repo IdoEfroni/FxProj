@@ -92,6 +92,32 @@ public class MyViewController implements IView {
     @Override
     public void displayMaze(int[][] maze) {
     }
+
+    public void help(ActionEvent event) throws IOException{
+        MyModel model = new MyModel();
+        //model.startServers();
+        MyViewModel viewModel = new MyViewModel(model);
+        model.addObserver(viewModel);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("help.fxml"));
+
+        Parent tableParent = fxmlLoader.load();
+        Scene scene = new Scene(tableParent, 800, 700);
+        scene.getStylesheets().add(getClass().getResource("helpStyle.css").toExternalForm());
+        MenuItem menu = ((MenuItem) event.getSource());
+        while (menu.getParentPopup() == null) {
+            menu = menu.getParentMenu();
+        }
+
+        Stage window = (Stage) menu.getParentPopup().getOwnerWindow();
+        window.setScene(scene);
+
+        helpController view = fxmlLoader.getController();
+//       view.setResizeEvent(scene);
+        view.setViewModel(viewModel);
+        viewModel.addObserver(view);
+
+        window.show();
+    }
 }
 
 
