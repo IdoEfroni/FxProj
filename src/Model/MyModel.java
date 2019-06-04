@@ -29,9 +29,9 @@ public class MyModel extends Observable implements IModel{
 
     private int[][] maze;
     private Maze mazeM;
-    private Server mazeGeneratingServer;
-    private Server mazeSolutionServer;
     private ArrayList<int[]> arraySol = new ArrayList<int[]>();
+    private static Server mazeGeneratingServer;
+    private static Server mazeSolutionServer;
     public MyModel() {
         startServers();
     }
@@ -57,6 +57,7 @@ public class MyModel extends Observable implements IModel{
     public int getEndPositionRow() {
         return endPositionRow;
     }
+
     public int getEndPositionColumn() {
         return endPositionColumn;
     }

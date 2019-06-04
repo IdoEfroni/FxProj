@@ -1,12 +1,14 @@
 package View;
 
 import java.awt.*;
+import java.awt.Button;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.io.IOException;
 import java.util.Random;
 import java.util.WeakHashMap;
 
+import Model.IModel;
 import Model.MyModel;
 import ViewModel.MyViewModel;
 import javafx.event.ActionEvent;
@@ -39,7 +41,7 @@ public class MyViewController implements IView {
     @FXML
     public void about(ActionEvent event) {
         Pane pane = new HBox(15);
-        Image im = new Image("file:///Users/Public/FxProj/src/snoop.jpg");
+        Image im = new Image("snoop.jpg");
         ImageView imv = new ImageView(im);
 //    pane.getChildren().add(imv);
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "ido & inon");
@@ -51,7 +53,7 @@ public class MyViewController implements IView {
     public void New(ActionEvent event) throws IOException {
 
         MyModel model = new MyModel();
-        model.startServers();
+        //model.startServers();
         MyViewModel viewModel = new MyViewModel(model);
         model.addObserver(viewModel);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("newGame.fxml"));
@@ -59,12 +61,24 @@ public class MyViewController implements IView {
         Parent tableParent = fxmlLoader.load();
         Scene scene = new Scene(tableParent, 800, 700);
         scene.getStylesheets().add(getClass().getResource("GenerateStyle.css").toExternalForm());
-        MenuItem menu = ((MenuItem) event.getSource());
-        while (menu.getParentPopup() == null) {
-            menu = menu.getParentMenu();
+
+
+        Stage window = null;
+        if (event.getTarget().toString().substring(0,event.getTarget().toString().indexOf('@')).equals("MenuItem")){
+            MenuItem menu = ((MenuItem) event.getSource());
+            while (menu.getParentPopup() == null) {
+                menu = menu.getParentMenu();
+            }
+
+            window = (Stage) menu.getParentPopup().getOwnerWindow();
+        }
+        else{
+            //Button button = ((Button)event.getSource());
+            window = (Stage)((Node)event.getSource()).getScene().getWindow();
         }
 
-        Stage window = (Stage) menu.getParentPopup().getOwnerWindow();
+        //Stage window = new Stage();
+
         window.setScene(scene);
 
         NewGameController view = fxmlLoader.getController();

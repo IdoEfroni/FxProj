@@ -49,14 +49,15 @@ public class MazeDisplayer extends Canvas {
             double canvasWidth = getWidth();
             double cellHeight = canvasHeight / maze.length;
             double cellWidth = canvasWidth / maze[0].length;
-            Image wallImage = new Image("file:///Users/Public/FxProj/src/View/brick.jpg");
-            Image characterImage = new Image("file:///Users/Public/FxProj/src/View/mario.png");
-            Image path = new Image("file:///Users/Public/FxProj/src/View/path.png");
 
-            Image endImg = new Image("file:///Users/Public/FxProj/src/View/peach.jpg");
+            Image wallImage = new Image("brick.jpg");
+            Image characterImage = new Image("mario.png");
+            Image path = new Image("path.png");
+            Image endImg = new Image("peach.jpg");
 
             GraphicsContext gc = getGraphicsContext2D();
             gc.clearRect(0, 0, getWidth(), getHeight());
+
             //Draw Maze
             for (int i = 0; i < maze.length; i++) {
                 for (int j = 0; j < maze[i].length; j++) {
@@ -64,7 +65,7 @@ public class MazeDisplayer extends Canvas {
                         //gc.fillRect(i * cellHeight, j * cellWidth, cellHeight, cellWidth);
                         gc.drawImage(wallImage, j * cellHeight, i * cellWidth, cellHeight, cellWidth);
                     }
-                    else {
+                    else{
                         gc.drawImage(path, j * cellHeight, i * cellWidth, cellHeight, cellWidth);
                     }
                 }
@@ -109,10 +110,10 @@ public class MazeDisplayer extends Canvas {
             double canvasWidth = getWidth();
             double cellHeight = canvasHeight / maze.length;
             double cellWidth = canvasWidth / maze[0].length;
-            Image wallImage = new Image("file:///Users/Public/FxProj/src/View/brick.jpg");
-            Image characterImage = new Image("file:///Users/Public/FxProj/src/View/mario.png");
-            Image path = new Image("file:///Users/Public/FxProj/src/View/path.png");
-            Image endImg = new Image("file:///Users/Public/FxProj/src/View/peach.jpg");
+            Image wallImage = new Image("brick.jpg");
+            Image characterImage = new Image("mario.png");
+            Image path = new Image("path.png");
+            Image endImg = new Image("peach.jpg");
 
             GraphicsContext gc = getGraphicsContext2D();
             gc.clearRect(0, 0, getWidth(), getHeight());
@@ -138,7 +139,7 @@ public class MazeDisplayer extends Canvas {
             for(int i=0;i<arrsol.size();i++){
                 int x = arrsol.get(i)[0];
                 int y = arrsol.get(i)[1];
-                Image ravan = new Image("file:///Users/Public/FxProj/src/View/coin.png");
+                Image ravan = new Image("coin.png");
                 gc.drawImage(ravan, y * cellHeight, x * cellWidth, cellHeight, cellWidth);
 
             }

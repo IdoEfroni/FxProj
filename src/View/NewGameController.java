@@ -37,6 +37,7 @@ public class NewGameController implements Observer,Initializable, IView {
     ObservableList listGenerate = FXCollections.observableArrayList();
     ObservableList listSolution = FXCollections.observableArrayList();
 
+    private boolean finish = false;
 
     private MyViewModel viewModel;
     @FXML
@@ -135,6 +136,7 @@ public class NewGameController implements Observer,Initializable, IView {
                 int width = Integer.valueOf(txtfld_columnsNum.getText());
                 viewModel.generateMaze(width, heigth);
                 displayMaze(viewModel.getMaze());
+                finish = false;
 
             }
         } catch (FileNotFoundException e) {
@@ -209,7 +211,7 @@ public class NewGameController implements Observer,Initializable, IView {
     @FXML
     public void New(ActionEvent event) throws IOException {
         MyModel model = new MyModel();
-        model.startServers();
+        //model.startServers();
         MyViewModel viewModel = new MyViewModel(model);
         model.addObserver(viewModel);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("newGame.fxml"));
@@ -230,6 +232,8 @@ public class NewGameController implements Observer,Initializable, IView {
         view.setViewModel(viewModel);
         viewModel.addObserver(view);
 
+        finish = false;
+
         window.show();
     }
 
@@ -237,7 +241,7 @@ public class NewGameController implements Observer,Initializable, IView {
     @FXML
     public void about(ActionEvent event) {
         Pane pane = new HBox(15);
-        javafx.scene.image.Image im = new Image("file:///Users/Public/FxProj/src/snoop.jpg");
+        javafx.scene.image.Image im = new Image("snoop.jpg");
         ImageView imv = new ImageView(im);
 //    pane.getChildren().add(imv);
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "ido & inon");
@@ -246,8 +250,14 @@ public class NewGameController implements Observer,Initializable, IView {
     }
 
     public void KeyPressed(KeyEvent keyEvent) {
-        viewModel.moveCharacter(keyEvent.getCode());
-        keyEvent.consume();
+        if(!finish) {
+            viewModel.moveCharacter(keyEvent.getCode());
+            keyEvent.consume();
+        }
+        if(viewModel.getCharacterPositionRow() == viewModel.getEndPositionRow() && viewModel.getCharacterPositionColumn() == viewModel.getEndPositionColumn()){
+            finish = true;
+            screen.setText("Congratulations!");
+        }
     }
 
 
