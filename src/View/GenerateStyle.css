@@ -1,6 +1,4 @@
 .root{
-
-
     -fx-background-image: url("../../../../resources/super.jpg");
     -fx-background-repeat: stretch;
     -fx-background-size: cover, auto;
