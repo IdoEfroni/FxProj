@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
@@ -41,10 +42,10 @@
                <children>
                   <Button mnemonicParsing="false" onAction="#solve" prefHeight="25.0" prefWidth="200.0" text="Solution" GridPane.columnSpan="2" GridPane.rowIndex="7" />
                   <Label text="Maze rows" />
-                  <TextField fx:id="txtfld_rowsNum" GridPane.columnIndex="1" />
+                  <TextField fx:id="txtfld_rowsNum" text="50" GridPane.columnIndex="1" />
                   <Label text="Maze columns:" GridPane.rowIndex="1" />
                   <Button mnemonicParsing="false" onAction="#generate" prefHeight="25.0" prefWidth="200.0" text="Generate" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                  <TextField fx:id="txtfld_columnsNum" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtfld_columnsNum" text="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <ComboBox fx:id="comboSolve" prefWidth="200.0" promptText="Choose a Solution" GridPane.columnSpan="2" GridPane.rowIndex="6" />
                   <ComboBox fx:id="combo" prefWidth="200.0" promptText="Maze Difficullty" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                </children>
@@ -113,18 +114,12 @@
       </TextField>
    </bottom>
     <center>
-      <GridPane fx:id="pane" BorderPane.alignment="CENTER">
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-         </rowConstraints>
+      <Pane fx:id="pane" BorderPane.alignment="CENTER">
          <children>
-                <MazeDisplayer fx:id="mazeDisplayer" height="600.0" imageFileNameWall="wall.jpg" width="600.0" />
-                <SolDisplayer fx:id="solDisplayer" height="600.0" imageFileNamePath="path.jpg" width="600.0" />
+                <MazeDisplayer fx:id="mazeDisplayer" height="600.0" imageFileNameWall="brick.jpg" width="600.0" />
+                <SolDisplayer fx:id="solDisplayer" height="600.0" imageFileNamePath="coin.jpg" width="600.0" />
                 <CharacterDisplayer fx:id="characterDisplayer" height="600.0" imageFileNameCharacter="mario.jpg" width="600.0" />
          </children>
-      </GridPane>
+      </Pane>
     </center>
 </BorderPane>

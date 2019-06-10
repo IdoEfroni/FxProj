@@ -32,7 +32,7 @@ public class CharacterDisplayer extends Canvas {
             double canvasWidth = getWidth();
             double cellHeight = canvasHeight / maze.length;
             double cellWidth = canvasWidth / maze[0].length;
-            Image characterImage = new Image("mario.png");
+            Image characterImage = new Image("mario.jpg");
             Image endImg = new Image("peach.jpg");
             GraphicsContext gc = getGraphicsContext2D();
             gc.clearRect(0, 0, getWidth(), getHeight());

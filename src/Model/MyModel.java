@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 
 public class MyModel extends Observable implements IModel{
     private ExecutorService threadPool = Executors.newCachedThreadPool();
-    private ExecutorService threadPool2 = Executors.newCachedThreadPool();
+    private ExecutorService executor = Executors.newFixedThreadPool(Configurations.ThreadPoolSize());
 
     private int[][] maze;
     private Maze mazeM;
@@ -38,8 +38,8 @@ public class MyModel extends Observable implements IModel{
 
     public void startServers() {
         if (mazeGeneratingServer == null) {
-            mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
             mazeSolutionServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
+            mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
             mazeGeneratingServer.start();
             mazeSolutionServer.start();
         }
@@ -65,14 +65,9 @@ public class MyModel extends Observable implements IModel{
     @Override
     public void generateMaze(int width, int height) {
         //Generate maze
-        threadPool.execute(() -> {
+        executor.execute(() -> {
             //generateRandomMaze(width,height);
             CommunicateWithServer_MazeGenerating(width, height);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             setChanged();
             notifyObservers();
         });
@@ -83,18 +78,14 @@ public class MyModel extends Observable implements IModel{
             mazeSolutionServer.start();
         }
     }
-    public void solveMaze(){
-        threadPool.execute(() -> {
+    public void solveMaze() throws InterruptedException {
+        executor.execute(() -> {
             //generateRandomMaze(width,height);
             CommunicateWithServer_SolveSearchProblem();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             setChanged();
             notifyObservers();
         });
+        Thread.sleep(1000);
     }
 
     @Override
@@ -167,9 +158,8 @@ public class MyModel extends Observable implements IModel{
                             System.out.println(String.format("%s. %s", i, ((AState)mazeSolutionSteps.get(i)).toString()));
                             MazeState mazeS = (MazeState)mazeSolutionSteps.get(i);
                             int []temp = {mazeS.getPosition().getRowIndex(),mazeS.getPosition().getColumnIndex()};
-                            MyModel.this.arraySol.add(temp);
+                            arraySol.add(temp);
                         }
-
                     } catch (Exception var10) {
                         var10.printStackTrace();
                     }

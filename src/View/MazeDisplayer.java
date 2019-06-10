@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class MazeDisplayer extends Canvas {
 
     private int[][] maze;
+
     public void setMaze(int[][] maze) {
         this.maze = maze;
         redraw();
@@ -29,7 +30,7 @@ public class MazeDisplayer extends Canvas {
             double cellHeight = canvasHeight / maze.length;
             double cellWidth = canvasWidth / maze[0].length;
             Image wallImage = new Image("brick.jpg");
-            Image path = new Image("path.png");
+            Image path = new Image("path.jpg");
             GraphicsContext gc = getGraphicsContext2D();
             gc.clearRect(0, 0, getWidth(), getHeight());
             //Draw Maze
@@ -44,13 +45,16 @@ public class MazeDisplayer extends Canvas {
                 }
             }
         }
+
     }
 
     //region Properties
     private StringProperty ImageFileNameWall = new SimpleStringProperty();
+
     public String getImageFileNameWall() {
         return ImageFileNameWall.get();
     }
+
     public void setImageFileNameWall(String imageFileNameWall) {
         this.ImageFileNameWall.set(imageFileNameWall);
     }

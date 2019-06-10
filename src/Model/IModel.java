@@ -16,7 +16,7 @@ public interface IModel {
     int getCharacterPositionRow();
 
     int getCharacterPositionColumn();
-    void solveMaze();
+    void solveMaze() throws InterruptedException;
     ArrayList<int[]> getSolution();
 
     int getEndPositionRow();

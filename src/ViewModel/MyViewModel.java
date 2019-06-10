@@ -70,7 +70,7 @@ public class MyViewModel  extends Observable implements Observer {
     public ArrayList<int[]> getsolution(){
         return model.getSolution();
     }
-    public void solveMaze(){
+    public void solveMaze() throws InterruptedException {
         model.solveMaze();
     }
 

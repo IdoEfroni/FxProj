@@ -64,17 +64,6 @@ public class MyViewController implements IView {
         Scene scene = new Scene(tableParent, 800, 700);
         scene.getStylesheets().add(getClass().getResource("GenerateStyle.css").toExternalForm());
 
-        String ssound = "file:///C:/Users/Public/FxProj/resources/maritheme.mp3";
-        Media sound = new Media(ssound);
-        MediaPlayer a =new MediaPlayer(sound);
-        a.setOnEndOfMedia(new Runnable() {
-            public void run() {
-                a.seek(Duration.ZERO);
-            }
-        });
-        a.play();
-
-
         Stage window = null;
         if (event.getTarget().toString().substring(0, event.getTarget().toString().indexOf('@')).equals("MenuItem")) {
             MenuItem menu = ((MenuItem) event.getSource());
@@ -93,6 +82,8 @@ public class MyViewController implements IView {
         window.setScene(scene);
 
         NewGameController view = fxmlLoader.getController();
+        view.setSize();
+        view.setMusic();
 //        view.setResizeEvent(scene);
         view.setViewModel(viewModel);
         viewModel.addObserver(view);

@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -38,12 +39,12 @@ import java.net.URL;
 import java.util.*;
 
 public class NewGameController implements Observer, Initializable, IView {
+    boolean solve = false;
     boolean lock = true;
+    boolean end = false;
     ObservableList listGenerate = FXCollections.observableArrayList();
     ObservableList listSolution = FXCollections.observableArrayList();
-
     private boolean finish = false;
-
     private MyViewModel viewModel;
     @FXML
     private ComboBox<String> comboSolve;
@@ -64,9 +65,13 @@ public class NewGameController implements Observer, Initializable, IView {
     @FXML
     public CharacterDisplayer characterDisplayer;
     @FXML
-    private GridPane pane;
+    private Pane pane;
     @FXML
     private BorderPane border;
+
+    private static String ssound = "file:///C:/Users/Public/FxProj/resources/maritheme.mp3";
+    private static Media sound = new Media(ssound);
+    private static MediaPlayer a = new MediaPlayer(sound);
     /* the code from the lecture*/
     public void setViewModel(MyViewModel viewModel) {
         this.viewModel = viewModel;
@@ -74,22 +79,7 @@ public class NewGameController implements Observer, Initializable, IView {
 
     @Override
     public void displayMaze(int[][] maze) {
-        //pane.prefWidthProperty().bind(border.getCenter().layoutXProperty());
-        //pane.prefHeightProperty().bind(border.getCenter().layoutYProperty());
-        mazeDisplayer.heightProperty().bind(pane.heightProperty());
-        mazeDisplayer.widthProperty().bind(pane.widthProperty());
-        mazeDisplayer.widthProperty().addListener(event -> mazeDisplayer.redraw());
-        mazeDisplayer.heightProperty().addListener(event -> mazeDisplayer.redraw());
 
-        solDisplayer.heightProperty().bind(pane.heightProperty());
-        solDisplayer.widthProperty().bind(pane.widthProperty());
-        solDisplayer.widthProperty().addListener(event -> solDisplayer.presentSol());
-        solDisplayer.heightProperty().addListener(event -> solDisplayer.presentSol());
-
-        characterDisplayer.heightProperty().bind(pane.heightProperty());
-        characterDisplayer.widthProperty().bind(pane.widthProperty());
-        characterDisplayer.widthProperty().addListener(event -> characterDisplayer.displayCharcter());
-        characterDisplayer.heightProperty().addListener(event -> characterDisplayer.displayCharcter());
 
         mazeDisplayer.setMaze(maze);
         characterDisplayer.setMaze(maze);
@@ -98,8 +88,9 @@ public class NewGameController implements Observer, Initializable, IView {
         int endPositionRow = viewModel.getEndPositionRow();
         int endPositionCol = viewModel.getEndPositionColumn();
         characterDisplayer.setCharacterPosition(characterPositionRow, characterPositionColumn, endPositionRow, endPositionCol);
-        // this.characterPositionRow.set(characterPositionRow + "");
-        //this.characterPositionColumn.set(characterPositionColumn + "");
+        if(solve==true) {
+            solDisplayer.cleanCell(characterPositionRow, characterPositionColumn);
+        }
     }
 
     @Override
@@ -109,26 +100,12 @@ public class NewGameController implements Observer, Initializable, IView {
         }
     }
 
-    public void setResizeEvent(Scene scene) {
-        long width = 0;
-        long height = 0;
-        scene.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-                System.out.println("Width: " + newSceneWidth);
-            }
-        });
-        scene.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-                System.out.println("Height: " + newSceneHeight);
-            }
-        });
-    }
-
 
     @FXML
     private void generate(ActionEvent event) {
+        if(end ==true){
+            a.play();
+        }
         solDisplayer.cleansol();
         lock = false;
         screen.setText("");
@@ -137,7 +114,6 @@ public class NewGameController implements Observer, Initializable, IView {
         try {
             InputStream in = new FileInputStream("resources/config.properties");
             Throwable var1 = null;
-
             SimpleMazeGenerator var3;
             Properties prop = new Properties();
             prop.load(in);
@@ -163,12 +139,33 @@ public class NewGameController implements Observer, Initializable, IView {
                 }
                 prop.store(out, null);
                 out.close();
-                int heigth = Integer.valueOf(txtfld_rowsNum.getText());
-                int width = Integer.valueOf(txtfld_columnsNum.getText());
-                viewModel.generateMaze(width, heigth);
-                displayMaze(viewModel.getMaze());
-                finish = false;
 
+                String heigth = txtfld_rowsNum.getText();
+                String width = txtfld_columnsNum.getText();
+                boolean correctVal = true;
+                for (int i = 0; i < heigth.length(); i++)
+                    if (Character.isDigit(heigth.charAt(i)) == false){
+                        correctVal = false;
+                    }
+                for (int i = 0; i < width.length(); i++)
+                    if (Character.isDigit(width.charAt(i)) == false){
+                        correctVal = false;
+                    }
+                if(correctVal) {
+                    int intWidth =  Integer.parseInt(width);
+                    int intHeigth = Integer.parseInt(heigth);
+                    if(intWidth>0&&intHeigth>0) {
+                        viewModel.generateMaze(intWidth, intWidth);
+                        displayMaze(viewModel.getMaze());
+                        finish = false;
+                    }else{
+                        screen.setText("Please enter correct values");
+                        System.out.println("Please enter correct values");
+                    }
+                }else{
+                    screen.setText("Please enter correct values");
+                    System.out.println("Please enter correct values");
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -185,7 +182,6 @@ public class NewGameController implements Observer, Initializable, IView {
             try {
                 InputStream in = new FileInputStream("resources/config.properties");
                 Throwable var1 = null;
-
                 SimpleMazeGenerator var3;
                 Properties prop = new Properties();
                 prop.load(in);
@@ -210,6 +206,7 @@ public class NewGameController implements Observer, Initializable, IView {
                         screen.setText("Best first search is selected");
                         System.out.println("Best first search");
                     }
+                    solve=true;
                     viewModel.solveMaze();
                     solDisplayer.setMaze(viewModel.getMaze());
                     solDisplayer.setSol(viewModel.getsolution());
@@ -219,13 +216,15 @@ public class NewGameController implements Observer, Initializable, IView {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        }
-        else {
+        } else {
             screen.setText("you can't do it");
             System.out.println("you can't do it");
         }
     }
+
     @FXML
     public void New(ActionEvent event) throws IOException {
         MyModel model = new MyModel();
@@ -233,18 +232,6 @@ public class NewGameController implements Observer, Initializable, IView {
         MyViewModel viewModel = new MyViewModel(model);
         model.addObserver(viewModel);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("newGame.fxml"));
-
-
-        String ssound = "file:///C:/Users/Public/FxProj/resources/maritheme.mp3";
-        Media sound = new Media(ssound);
-        MediaPlayer a =new MediaPlayer(sound);
-        a.setOnEndOfMedia(new Runnable() {
-            public void run() {
-                a.seek(Duration.ZERO);
-            }
-        });
-        a.play();
-
 
         Parent tableParent = fxmlLoader.load();
         Scene scene = new Scene(tableParent, 800, 700);
@@ -255,10 +242,10 @@ public class NewGameController implements Observer, Initializable, IView {
         }
         Stage window = (Stage) menu.getParentPopup().getOwnerWindow();
         window.setScene(scene);
-        //pane.prefHeightProperty().bind(scene.heightProperty());
-        //pane.prefWidthProperty().bind(scene.widthProperty());
+
         NewGameController view = fxmlLoader.getController();
-//      view.setResizeEvent(scene);
+        view.setSize();
+        view.setMusic();
         view.setViewModel(viewModel);
         viewModel.addObserver(view);
         finish = false;
@@ -276,15 +263,29 @@ public class NewGameController implements Observer, Initializable, IView {
         alert.showAndWait();
     }
 
-    public void KeyPressed(KeyEvent keyEvent) {
+    public void KeyPressed(KeyEvent keyEvent) throws IOException {
         if (!finish) {
             viewModel.moveCharacter(keyEvent.getCode());
             keyEvent.consume();
         }
-        if (viewModel.getCharacterPositionRow() == viewModel.getEndPositionRow() && viewModel.getCharacterPositionColumn() == viewModel.getEndPositionColumn()) {
+        if (viewModel.getCharacterPositionRow() == viewModel.getEndPositionRow() && viewModel.getCharacterPositionColumn() == viewModel.getEndPositionColumn()&&lock==false) {
             finish = true;
+            end = true;
+            a.stop();
+            String url = "file:///C:/Users/Public/FxProj/resources/CourseClear.mp3";
+            Media usound = new Media(url);
+            MediaPlayer mediaPlayer = new MediaPlayer(usound);
+            mediaPlayer.play();
             screen.setText("Congratulations!");
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EndGame.fxml"));
+            Parent tableParent = (Parent)fxmlLoader.load();
+            Scene scene = new Scene(tableParent, 800, 700);
+            scene.getStylesheets().add(getClass().getResource("EndGameStyle.css").toExternalForm());
+            Stage window = new Stage();
+            window.setScene(scene);
+            window.show();
         }
+
     }
 
 
@@ -306,5 +307,30 @@ public class NewGameController implements Observer, Initializable, IView {
         listSolution.addAll(name_S1, name_S2, name_S3);
         combo.getItems().addAll(listGenerate);
         comboSolve.getItems().addAll(listSolution);
+    }
+
+    public void setSize() {
+
+        mazeDisplayer.heightProperty().bind(pane.heightProperty());
+        mazeDisplayer.widthProperty().bind(pane.widthProperty());
+        mazeDisplayer.widthProperty().addListener(event -> mazeDisplayer.redraw());
+        mazeDisplayer.heightProperty().addListener(event -> mazeDisplayer.redraw());
+
+        solDisplayer.heightProperty().bind(pane.heightProperty());
+        solDisplayer.widthProperty().bind(pane.widthProperty());
+        solDisplayer.widthProperty().addListener(event -> solDisplayer.presentSol());
+        solDisplayer.heightProperty().addListener(event -> solDisplayer.presentSol());
+
+        characterDisplayer.heightProperty().bind(pane.heightProperty());
+        characterDisplayer.widthProperty().bind(pane.widthProperty());
+        characterDisplayer.widthProperty().addListener(event -> characterDisplayer.displayCharcter());
+        characterDisplayer.heightProperty().addListener(event -> characterDisplayer.displayCharcter());
+
+    }
+
+    public void setMusic() {
+        // URL resource = getClass().getResource("maritheme.mp3");
+        a.setCycleCount(MediaPlayer.INDEFINITE);
+        a.play();
     }
 }
