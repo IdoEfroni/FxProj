@@ -24,8 +24,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MyModel extends Observable implements IModel{
-    private ExecutorService threadPool = Executors.newCachedThreadPool();
-    private ExecutorService executor = Executors.newFixedThreadPool(Configurations.ThreadPoolSize());
+    //private ExecutorService threadPool = Executors.newCachedThreadPool();
+    //private ExecutorService executor = Executors.newFixedThreadPool(Configurations.ThreadPoolSize());
 
     private int[][] maze;
     private Maze mazeM;
@@ -65,12 +65,11 @@ public class MyModel extends Observable implements IModel{
     @Override
     public void generateMaze(int width, int height) {
         //Generate maze
-        executor.execute(() -> {
             //generateRandomMaze(width,height);
             CommunicateWithServer_MazeGenerating(width, height);
             setChanged();
             notifyObservers();
-        });
+
     }
     public void startSolve(){
         if (mazeSolutionServer == null) {
@@ -79,13 +78,11 @@ public class MyModel extends Observable implements IModel{
         }
     }
     public void solveMaze() throws InterruptedException {
-        executor.execute(() -> {
-            //generateRandomMaze(width,height);
+
             CommunicateWithServer_SolveSearchProblem();
             setChanged();
             notifyObservers();
-        });
-        Thread.sleep(1000);
+
     }
 
     @Override

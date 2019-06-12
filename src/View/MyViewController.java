@@ -11,6 +11,7 @@ import java.util.WeakHashMap;
 import Model.IModel;
 import Model.MyModel;
 import ViewModel.MyViewModel;
+import com.sun.glass.ui.Screen;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -60,8 +61,8 @@ public class MyViewController implements IView {
         model.addObserver(viewModel);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("newGame.fxml"));
 
-        Parent tableParent = fxmlLoader.load();
-        Scene scene = new Scene(tableParent, 800, 700);
+        Parent tableParent = FXMLLoader.load(getClass().getResource("newGame.fxml"));
+        Scene scene = new Scene(tableParent, 900, 800);
         scene.getStylesheets().add(getClass().getResource("GenerateStyle.css").toExternalForm());
 
         Stage window = null;
@@ -90,6 +91,8 @@ public class MyViewController implements IView {
 
         window.show();
     }
+
+
 
     @Override
     public void displayMaze(int[][] maze) {

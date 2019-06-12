@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class SolDisplayer extends Canvas {
+
+
     private int[][] maze;
     private ArrayList<int[]> arrsol;
 
@@ -71,4 +73,5 @@ public class SolDisplayer extends Canvas {
         GraphicsContext gc = getGraphicsContext2D();
         gc.drawImage(coin, characterPositionColumn * cellHeight, characterPositionRow * cellWidth, cellHeight, cellWidth);
     }
+
 }
